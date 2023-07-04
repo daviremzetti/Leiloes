@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import java.sql.PreparedStatement;
 
 
 
@@ -17,14 +18,17 @@ import javax.swing.JOptionPane;
  */
 public class conectaDAO {
     
-    public Connection connectDB(){
+    public Connection connectDB() throws ClassNotFoundException{
         Connection conn = null;
         
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
+            String url = "jdbc:mysql://localhost/uc11";
+            String user = "root";
+            String password = "123456";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(url, user, password);
             
-        } catch (SQLException erro){
+        } catch (SQLException | ClassNotFoundException erro){
             JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
         }
         return conn;
