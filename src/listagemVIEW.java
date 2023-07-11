@@ -1,11 +1,9 @@
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 
 /**
  *
@@ -54,6 +52,11 @@ public class listagemVIEW extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel2.setText("Vender Produto (ID)");
 
+        id_produto_venda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                id_produto_vendaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(id_produto_venda);
 
         btnVender.setText("Vender");
@@ -128,9 +131,14 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
+        int id = Integer.parseInt(id_produto_venda.getText());
         
         ProdutosDAO produtosdao = new ProdutosDAO();
+        try {
+            produtosdao.venderProdutos(id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro na gravação no banco de dados", "ERRO", JOptionPane.ERROR);
+        } 
         
         //produtosdao.venderProduto(Integer.parseInt(id));
         listarProdutos();
@@ -144,6 +152,13 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void id_produto_vendaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_produto_vendaKeyTyped
+        String caracteres = "0123456789";
+        if(!caracteres.contains(evt.getKeyChar() + "")){
+            evt.consume();
+        }
+    }//GEN-LAST:event_id_produto_vendaKeyTyped
 
     /**
      * @param args the command line arguments

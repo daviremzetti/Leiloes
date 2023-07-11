@@ -45,7 +45,7 @@ public class ProdutosDAO {
     public ArrayList<ProdutosDTO> listarProdutos() throws ClassNotFoundException {
         conectaDAO conexao = new conectaDAO();
         ArrayList<ProdutosDTO> listagem = new ArrayList<>();
-        
+
         try {
             conn = conexao.connectDB();
             prep = conn.prepareStatement("select * from produtos");
@@ -67,6 +67,38 @@ public class ProdutosDAO {
         }
 
         return listagem;
+    }
+
+    public void venderProdutos(int id) throws SQLException, ClassNotFoundException {
+        conectaDAO conexao = new conectaDAO();
+        boolean encontrado = false;
+
+        try {
+            conn = conexao.connectDB();
+            prep = conn.prepareStatement("select status from produtos where id = ?");
+            prep.setInt(1, id);
+            resultset = prep.executeQuery();
+            while (resultset.next()) {
+                String status = resultset.getString("status");
+                if (status.equals("A Venda")) {
+                    prep = conn.prepareStatement("update produtos set status = 'Vendido' where id = ?");
+                    prep.setInt(1, id);
+                    prep.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+                    encontrado = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Produto já se encontra vendido");
+                    encontrado = true;
+                }
+            }
+            
+            if(encontrado == false){
+                JOptionPane.showMessageDialog(null, "Produto não vendido", "ID INEXISTENTE", JOptionPane.WARNING_MESSAGE);
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Falha na conexão");
+        }
     }
 
 }
